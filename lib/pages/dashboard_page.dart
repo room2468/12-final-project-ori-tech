@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:golekos/services/auth_services.dart';
 import 'package:golekos/theme.dart';
 import 'package:golekos/widgets/list_boarding_houses.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Dashboard extends StatefulWidget {
+  final User user;
+
+  Dashboard([this.user]);
+
   @override
   _DashboardState createState() => _DashboardState();
 }
@@ -36,9 +42,16 @@ class _DashboardState extends State<Dashboard> {
                               style: orderRegular.copyWith(fontSize: 22),
                             ),
                             Text(
-                              "Shayna Far",
+                              // If the user does not have a name and email, then display 'Guest' or user id
+
+                              (widget.user.displayName == null)
+                                  ? ((widget.user.email == null)
+                                      ? 'Guest'
+                                      : widget.user.email)
+                                  : widget.user.displayName,
                               style: orderBold.copyWith(
                                   fontSize: 22, fontWeight: FontWeight.bold),
+                              overflow: TextOverflow.ellipsis,
                             )
                           ],
                         )),
@@ -55,6 +68,21 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ]),
             ),
+
+            // TODO: Sign out
+
+            Container(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  await AuthService.signOut();
+
+                  Navigator.of(context).pop();
+                },
+                child: Text('Sign out'),
+              ),
+            ),
+
             Container(
               margin: EdgeInsets.only(left: 16, right: 16, top: 32),
               width: double.infinity,

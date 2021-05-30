@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:golekos/pages/dashboard_page.dart';
+import 'package:golekos/services/auth_services.dart';
 import 'package:golekos/theme.dart';
 
 class LoginPage extends StatefulWidget {
@@ -32,7 +34,15 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(20)),
                 color: Colors.white,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    var user = await AuthService.signInAnonymous();
+
+                    if (user != null) {
+                      var route =
+                          MaterialPageRoute(builder: (_) => Dashboard(user));
+                      Navigator.of(context).push(route);
+                    }
+                  },
                   child: Row(
                     children: [
                       SizedBox(
